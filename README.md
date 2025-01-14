@@ -11,10 +11,30 @@ This repository contains the scripts, examples of data, and results for an eQTL 
 - To contextualize findings by comparing results with previous eQTL studies in neurological diseases and reference genotype databases such as the GWAS catalog.
 
 ## Repository Structure
-The repository is organized as follows: 
+The repository is organized as follows:
 
-- *scripts* : todos los scripts de los distintos análsisi estan en esta carpeta
-  - *RNA-seq* : contiene los scripts del analisis de RNA-seq para determinar DEGs en pDCs de RRMS vs HC. 
-    - *align_run* scripts:  realiza la alineación de datos de secuenciación de ARN (RNA-seq) a un genoma de referencia utilizando la herramienta subread-align, procesando archivos FastQ emparejados (_R1 y _R2) en un directorio específico, y generando archivos BAM alineados como salida.únicamente cambian los archivos de entrada (fastq) para agilizar el proceso.
-    - *Read_summarization_featureCounts.R* : utiliza la librería Rsubread para preparar una lista de archivos BAM para un análisis posterior de sumarización de lecturas (read summarization) con featureCounts.
-    - *RNA_seq_analysis.R* : realiza un análisis de expresión diferencial para células dendríticas plasmacitoides (pDCs) en individuos de control (Control) y pacientes con esclerosis múltiple remitente-recurrente (RRMS). Incluye control de calidad, análisis exploratorio de variables, filtrado y normalización de genes, analisis de expresión diferencial, incluyendo exportación y visualización de resultados. 
+### `scripts`
+Contains all the scripts used in the different analyses.
+
+#### `RNA-seq`
+Scripts for RNA-seq analysis to identify DEGs in pDCs from RRMS patients versus healthy controls:
+- **`align_run scripts`**: 
+  - Performs alignment of RNA-seq data to a reference genome using the `subread-align` tool.
+  - Processes paired FastQ files (`_R1` and `_R2`) from a specific directory.
+  - Outputs aligned BAM files.
+  - Input files (FastQ) are varied for efficiency and to expedite the alignment process.
+
+- **`Read_summarization_featureCounts.R`**: 
+  - Utilizes the `Rsubread` library to prepare a list of BAM files.
+  - Performs read summarization analysis using `featureCounts`.
+
+- **`RNA_seq_analysis.R`**: 
+  - Conducts a comprehensive differential gene expression analysis for plasmacytoid dendritic cells (pDCs) in controls and RRMS patients. Includes:
+    - **Quality control**: Library size assessment, removal of low-expression genes, and normalization using TMM.
+    - **Exploratory analysis**: Multidimensional scaling (MDS) plots to visualize sample clustering and assess batch effects.
+    - **Gene filtering**: Removes genes with low expression or those located on sex chromosomes to reduce noise.
+    - **Differential expression analysis**: Uses voom and empirical Bayes statistics to identify DEGs between groups.
+    - **Visualization**: Generates heatmaps, MD plots, and other visualizations to represent results.
+    - **Exportation**: Exports results (e.g., DEGs) to CSV files for further exploration.
+
+---
