@@ -11,6 +11,10 @@ This repository contains the scripts, examples of data, and results for an eQTL 
 - To contextualize findings by comparing results with previous eQTL studies in neurological diseases and reference genotype databases such as the GWAS catalog.
 
 ## Repository Structure
-The repository is organized as follows:
+The repository is organized as follows: 
 
-- 
+- *scripts* : todos los scripts de los distintos análsisi estan en esta carpeta
+  - *RNA-seq* : contiene los scripts del analisis de RNA-seq para determinar DEGs en pDCs de RRMS vs HC. 
+    - *align_run* scripts:  realiza la alineación de datos de secuenciación de ARN (RNA-seq) a un genoma de referencia utilizando la herramienta subread-align, procesando archivos FastQ emparejados (_R1 y _R2) en un directorio específico, y generando archivos BAM alineados como salida.únicamente cambian los archivos de entrada (fastq) para agilizar el proceso.
+    - *Read_summarization_featureCounts.R* : utiliza la librería Rsubread para preparar una lista de archivos BAM para un análisis posterior de sumarización de lecturas (read summarization) con featureCounts.
+    - *RNA_seq_analysis.R* : realiza un análisis de expresión diferencial para células dendríticas plasmacitoides (pDCs) en individuos de control (Control) y pacientes con esclerosis múltiple remitente-recurrente (RRMS). Incluye control de calidad, análisis exploratorio de variables, filtrado y normalización de genes, analisis de expresión diferencial, incluyendo exportación y visualización de resultados. 
