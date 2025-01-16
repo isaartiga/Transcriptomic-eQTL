@@ -47,12 +47,3 @@ write_tsv(SNP_bulk, "SNP_DEG.txt")
 snpspos_bulk <- snpspos[snpspos$snpid %in% SNP_bulk$vcf.ID, ]
 write_tsv(snpspos_bulk, "snpsloc_DEG.txt")
 
-# Load the gene expression data
-GE <- read.csv("DEG_bulk_pDCs_RRvsHC.csv")
-
-# Step 5: Filter gene expression data (`GE`) to retain only samples present in `SNP_bulk`
-# Select only the "Gene" column and columns matching sample IDs in `SNP_bulk`
-GE <- GE[, c("geneid", colnames(SNP_bulk)[-1])]
-
-# Save the filtered gene expression data to a file
-write_tsv(GE, "GE.txt")

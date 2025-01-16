@@ -13,10 +13,10 @@ if (!require(MatrixEQTL)) {
 # Base directory where input and output files are stored
 base_directory <- "/mnt/sdb/iartiga/FINAL_ANALYSIS_eQTL/"
 
-# Configuration for STRATEGY_A
+# Configuration for pDCs
 # This list stores the parameters for the analysis, including the gene expression file and covariates.
 analysis_config <- list(
-  list(name = "STRATEGY_A", gene_expression_file = "GE_corrected.txt", covariates_file = "cov_age.txt")
+  list(name = "pDCs", gene_expression_file = "GE_corrected.txt", covariates_file = "cov_age.txt")
 )
 
 # Initialize an empty data.frame to store the summary of results
@@ -123,6 +123,9 @@ run_eqtl_analysis <- function(config) {
   # Append the summary to the global results data frame
   assign("results_summary", rbind(get("results_summary", envir = .GlobalEnv), strategy_summary), envir = .GlobalEnv)
   
+  # Save results
+  write.csv(significant_cis_eqtls, paste0("cis_FDR_", config$name, ".csv"))
+  
   # Clean up temporary files
   unlink(temp_output_trans)
   unlink(temp_output_cis)
@@ -134,3 +137,5 @@ run_eqtl_analysis(analysis_config[[1]])
 # Print the final summary table
 # This table includes key metrics like total cis-eQTLs, unique genes, and minimum FDR values.
 print(results_summary)
+
+

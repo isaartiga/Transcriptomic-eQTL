@@ -3,7 +3,7 @@ library(readr)
 library(readxl)
 
 # Load logcounts data from a CSV file and samplesheet data for metadata
-logcounts <- read_csv("pDC_logCounts_Isabel.csv")
+logcounts <- read_csv("logcounts_pDCs_RRvsHC.csv")
 samplesheet <- read_csv("conversion_samplesheet_pDCs_64.csv")
 
 # Step 1: Create a mapping between fileName and sampleID in the samplesheet
@@ -53,9 +53,8 @@ expr_corrected <- removeBatchEffect(
     design = design
 )
 
-# Load DEG (differentially expressed genes) data from an Excel file
-library(readxl)
-DEG <- read_excel("todos_DEG_BULK.xlsx")
+# Load DEG (differentially expressed genes) data 
+DEG <- read_csv("DEG_bulk_pDCs_RRvsHC.csv")
 
 # Step 6: Combine corrected expression data with gene names in a data frame
 logcounts_corrected <- as.data.frame(cbind(genes, expr_corrected))
