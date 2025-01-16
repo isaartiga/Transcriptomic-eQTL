@@ -10,79 +10,71 @@ This repository contains the scripts and results for an eQTL analysis conducted 
 - **Genotypic Variability**: Compare the allelic frequencies of key cis-eQTL-associated single nucleotide polymorphisms (SNPs) between RRMS patients and healthy controls.
 - **Pathway Enrichment**: Explore the functional implications of cis-eQTL results through GO and KEGG pathway enrichment.
 
-A comprehensive workflow diagram summarizes the analyses, bioinformatic tools used, and results (workflow_transcriptomic_eQTL).
-
-
----
-
 ## Repository Structure
-All scripts are located in the `scripts` folder and are categorized by analysis type: RNA-Seq, genotype_QC, eQTL_analysis, and post_eQTL_analysis (Genotypic Variability and Functional Enrichment). Below is an overview of the structure and key workflows:
+The repository is organized into folders and scripts according to the analysis workflows:
+
+### **Workflow Diagram**
+A comprehensive workflow diagram (found in `workflow_transcriptomic_eQTL.pdf`) summarizes the analyses, bioinformatic tools used, and results.
+
+### **Folders**
+- **`scripts/`**: Contains R and shell scripts for RNA-Seq, genotype QC, eQTL analysis, and post-eQTL analysis.
+- **`results/`**: Includes the DEG and significant cis-eQTL tables, along with diagnostic plots and pathway enrichment results.
+
+## Key Workflows
 
 ### RNA-Seq Analysis
-This analysis identifies DEGs in pDCs between RRMS and HC samples using the following scripts:
-- **`align_run scripts`**:
-  - Aligns RNA-seq data to a reference genome using the `subread-align` tool.
-  - Processes paired FastQ files (`_R1` and `_R2`) for each sequencing run and generates BAM files.
-- **`Read_summarization_featureCounts.R`**:
-  - Summarizes read counts from BAM files using the `Rsubread` library and prepares data for DEG analysis.
-- **`RNA_seq_analysis.R`**:
-  - Performs differential expression analysis with steps including:
-    - **Quality Control**: Library size checks, removal of low-expression genes, normalization (TMM).
-    - **Exploratory Analysis**: MDS plots for clustering and batch effect evaluation.
-    - **Gene Filtering**: Removes genes on sex chromosomes.
-    - **DEG Analysis**: Utilizes `voom` and empirical Bayes methods.
-    - **Visualization**: Generates heatmaps, MD plots, and other visualizations.
-    - **Export**: Outputs DEGs as CSV files.
+This analysis identifies DEGs in pDCs between RRMS and HC samples:
+- **Alignment**: Scripts align RNA-seq data to a reference genome using `subread-align`.
+- **Read Summarization**: Generates gene count tables using the `featureCounts` function in `Rsubread`.
+- **Differential Expression**: Conducts DEG analysis with the following steps:
+  - **Quality Control**: Normalization and removal of low-expression genes.
+  - **Exploratory Analysis**: MDS plots for clustering and batch effect evaluation.
+  - **DEG Analysis**: Using `voom` and empirical Bayes methods.
+  - **Visualization**: Heatmaps, MD plots, and other diagnostic plots.
 
----
+*Note: The RNA-Seq analysis scripts were initially created by the bioinformatics platform at IIS Biobizkaia. These scripts have been adapted for this study and tailored to meet the specific needs of this research.*
 
 ### Genotype Quality Control (QC)
-A main pipeline script (**`genotype_QC.sh`**) performs quality control (QC) at both the variant and sample levels. It calls individual R scripts throughout the process.
+The **`genotype_QC.sh`** pipeline performs quality control (QC) at both the variant and sample levels. It calls individual R scripts throughout the process to:
+- Filter variants by:
+  - **Missingness**: Excludes SNPs with missingness rates > 0.05.
+  - **Case-control rate differences**: Removes SNPs with significant differences (p < 1 × 10⁻⁵).
+  - **Minor Allele Frequency (MAF)**: Filters SNPs with MAF < 0.05 to reduce false-positive findings.
+  - **Hardy-Weinberg Equilibrium (HWE)**: Excludes SNPs with HWE violations (p < 1 × 10⁻¹⁰ in cases, p < 1 × 10⁻⁶ in controls).
+  - **Chromosomal Location**: Excludes SNPs outside chromosomes 1–23.
 
----
+- Filter samples by:
+  - **Missingness**: Removes samples with missingness rates > 0.05.
+  - **Heterozygosity**: Detects and removes samples with deviations in heterozygosity rates.
+  - **Sex Discrepancies**: Identifies mismatches between reported and genetic sex.
+  - **Relatedness**: Excludes samples with PI_HAT > 0.2.
+  - **Population Stratification**: Uses MDS analysis to identify and exclude population outliers by merging with the 1000 Genomes Project reference dataset.
+
+*Note: The genotype QC scripts were also developed by the bioinformatics platform at IIS Biobizkaia and customized for this analysis.*
 
 ### cis-eQTL Analysis
-A 1Mb window is applied around DEGs for cis-eQTL discovery using the `MatrixeQTL` package. Input files are formatted specifically for the analysis:
-- **`prepare_expression_data.R`**: Normalizes expression data and corrects for batch effects (sequencing kit and run).
-- **`vcf2matrixeqtlformat.R`**: Converts VCF files from genotype QC into the required format.
-- **`filter_SNP_GE.R`**: Filters SNPs and genes within 1Mb windows around DEGs.
-- **`prepare_covariates_files.R`**: Creates a covariates file using age as a covariate.
-- **`run_matrix_eQTL_final.R`**:
-  - Conducts cis-eQTL analysis using the `modelLINEAR` model.
-  - Filters significant cis-eQTLs by FDR < 0.05.
-- **`annotation_cis_eQTL.R`**: Annotates significant cis-eQTL results with genomic features.
-- **`graficos_violin_eqtl.R`**: Creates violin plots visualizing expression levels versus genotypes.
-
----
+A 1Mb window is applied around DEGs for cis-eQTL discovery using the `MatrixeQTL` package:
+- **Data Preparation**: Scripts normalize expression data, format genotype files, and filter SNPs within 1Mb of DEGs.
+- **Analysis**: Uses the `modelLINEAR` model to identify significant cis-eQTLs (FDR < 0.05).
+- **Annotation and Visualization**: Annotates results and visualizes genotype-expression associations with violin plots.
 
 ### Post-eQTL Analysis
-This analysis explores the biological significance of cis-eQTL findings:
-- **`genotypic_variability_analysis.R`**:
-  - Compares allelic frequencies between RRMS and HC using Fisher’s test.
-- **`GRAFICO_GENOTIPO_EXP_RR_CN.R`**:
-  - Visualizes genotype-expression associations using scatter plots.
-- **`script_go_kegg_final.R`**:
-  - Performs functional enrichment analysis (GO and KEGG).
-  - Outputs pathway enrichment plots.
+Explores the biological significance of cis-eQTL findings:
+- **Genotypic Variability**: Compares allelic frequencies between RRMS and HC.
+- **Functional Enrichment**: Conducts GO and KEGG pathway analysis to interpret functional relevance.
 
----
-
-### Results
-The `results` folder contains the complete DEG and significant cis-eQTL tables, excluded from the main thesis due to length.
-
----
+## Results
+The `results/` folder contains:
+- **DEG Results**: Complementary Table 1 with complete DEG information.
+- **cis-eQTL Results**: Complementary Table 2 with significant cis-eQTL findings.
 
 ## Usage
 1. **RNA-Seq Analysis**:
-   - Run the `align_run`, `Read_summarization_featureCounts.R`, and `RNA_seq_analysis.R` scripts sequentially.
+   - Run the scripts sequentially: `align_run`, `Read_summarization_featureCounts.R`, and `RNA_seq_analysis.R`.
 2. **Genotype QC**:
    - Execute `genotype_QC.sh` to process and filter genotyping data.
 3. **cis-eQTL Analysis**:
    - Prepare data using the formatting scripts, then run `run_matrix_eQTL_final.R`.
 4. **Post-eQTL Analysis**:
-   - Explore variability and enrichment using scripts in the `post_eQTL_analysis` folder.
-
----
-
-
+   - Use scripts in `post_eQTL_analysis` for variability and enrichment studies.
 
