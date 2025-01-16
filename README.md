@@ -9,7 +9,6 @@ This repository contains the scripts and results for an eQTL analysis conducted 
 - **cis-eQTL Analysis**: Uncover genetic variants influencing gene expression in plasmacytoid dendritic cells (pDCs) using DEGs.
 - **Genotypic Variability**: Compare the allelic frequencies of key cis-eQTL-associated single nucleotide polymorphisms (SNPs) between RRMS patients and healthy controls.
 - **Pathway Enrichment**: Explore the functional implications of cis-eQTL results through GO and KEGG pathway enrichment.
-- **Contextualization**: Compare findings with previous eQTL studies in neurological diseases and reference genotype databases such as the GWAS catalog.
 
 A comprehensive workflow diagram summarizes the analyses, bioinformatic tools used, and results (workflow_transcriptomic_eQTL).
 
@@ -38,18 +37,7 @@ This analysis identifies DEGs in pDCs between RRMS and HC samples using the foll
 ---
 
 ### Genotype Quality Control (QC)
-A main pipeline script (**`genotype_QC.sh`**) orchestrates the QC steps, calling individual R scripts for filtering variants, samples, and ensuring data integrity:
-1. **Variant QC**:
-   - **`MAF_check.R`**: Visualizes Minor Allele Frequency (MAF) distribution.
-   - **`hwe.R`**: Examines Hardy-Weinberg Equilibrium (HWE) deviations.
-   - **`hwe_zoom.R`**: Focuses on SNPs with extreme HWE deviations.
-2. **Sample QC**:
-   - **`check_heterozygosity_rate.R`**: Identifies heterozygosity outliers.
-   - **`heterozygosity_outliers_list.R`**: Creates removal lists for outliers.
-   - **`cryptic_relatedness_deletion.R`**: Detects related samples using PI_HAT values.
-   - **`EUR_MDS_merge2.R` and `MDS_merged.R`**: Filters European ancestry samples and generates population stratification plots.
-   - **`case_control.R`**: Examines missingness differences between cases and controls.
-3. **Output**: Cleaned genotype data and diagnostic plots.
+A main pipeline script (**`genotype_QC.sh`**) performs quality control (QC) at both the variant and sample levels. It calls individual R scripts throughout the process.
 
 ---
 
